@@ -56,7 +56,7 @@ var moveThis = function(obj) {
   obj.y = 32 + (Math.random() * (canvas.height - 64));
 }
 var collide = function() {
-  for (var i in monsters){
+  for (var i=0; i < monsters.length; i++){
     if (
       hero.x <= (monsters[i].x + 32)
       && monsters[i].x <= (hero.x + 32)
