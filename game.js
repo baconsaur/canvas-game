@@ -9,6 +9,9 @@ bgImage.src = "images/background.png";
 var heroImage = new Image();
 heroImage.src = "images/hero.png";
 
+var appleImage = new Image();
+appleImage.src = "images/apple.png";
+
 var monsterImage = new Image();
 monsterImage.src = "images/monster.png";
 
@@ -18,12 +21,19 @@ var hero = {
   y: 0
 };
 
-var monster = {
+var monsters = [];
+
+function Monster(){
+  this.x = 32 + (Math.random() * (canvas.width - 64));
+  this.y = 32 + (Math.random() * (canvas.height - 64));
+}
+
+var apple = {
   x: 0,
   y: 0
 };
-var monstersCaught = 0;
 
+var applesCollected = 0;
 var keysDown = {};
 
 addEventListener("keydown", function(e) {
@@ -37,19 +47,34 @@ addEventListener("keyup", function(e) {
 var reset = function() {
   hero.x = canvas.width / 2;
   hero.y = canvas.height /2;
-  monster.x = 32 + (Math.random() * (canvas.width - 64));
-  monster.y = 32 + (Math.random() * (canvas.height - 64));
+  applesCollected = 0;
+  moveThis(apple);
+  monsters = [];
 };
-
+var moveThis = function(obj) {
+  obj.x = 32 + (Math.random() * (canvas.width - 64));
+  obj.y = 32 + (Math.random() * (canvas.height - 64));
+}
 var collide = function() {
+  for (var i in monsters){
+    if (
+      hero.x <= (monsters[i].x + 32)
+      && monsters[i].x <= (hero.x + 32)
+      && hero.y <= (monsters[i].y + 32)
+      && monsters[i].y <= (hero.y + 32)
+    ) {
+      reset();
+    }
+  }
   if (
-    hero.x <= (monster.x + 32)
-    && monster.x <= (hero.x + 32)
-    && hero.y <= (monster.y + 32)
-    && monster.y <= (hero.y + 32)
+    hero.x <= (apple.x + 32)
+    && apple.x <= (hero.x + 32)
+    && hero.y <= (apple.y + 32)
+    && apple.y <= (hero.y + 32)
   ) {
-    ++monstersCaught;
-    reset();
+    ++applesCollected;
+    moveThis(apple);
+    monsters.push(new Monster());
   }
 };
 
@@ -82,14 +107,18 @@ var render = function() {
     ctx.drawImage(heroImage, hero.x, hero.y);
   }
   if(monsterImage.complete) {
-    ctx.drawImage(monsterImage, monster.x, monster.y);
+    for (var i in monsters)
+      ctx.drawImage(monsterImage, monsters[i].x, monsters[i].y);
+  }
+  if(appleImage.complete) {
+    ctx.drawImage(appleImage, apple.x, apple.y);
   }
 
   ctx.fillStyle = "rgb(250, 250, 250)";
   ctx.font = "24px Helvetica";
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
-  ctx.fillText("Monsters caught: " + monstersCaught, 32, 32);
+  ctx.fillText("Apples collected: " + applesCollected, 32, 32);
 };
 
 var main = function() {
