@@ -26,6 +26,7 @@ var raptors = [];
 function Raptor(){
   this.x = 32 + (Math.random() * (canvas.width - 64));
   this.y = 32 + (Math.random() * (canvas.height - 64));
+  this.speed = 16;
 }
 
 var apple = {
@@ -95,6 +96,30 @@ var update = function(modifier) {
   collide();
 }
 
+var movement = function() {
+  for (i in raptors){
+    var moveRandom = Math.floor(Math.random() * 40);
+    switch (moveRandom) {
+      case 1:
+        if (raptors[i].x < canvas.width - 128)
+          raptors[i].x += raptors[i].speed;
+        break;
+      case 2:
+        if (raptors[i].x > 64)
+          raptors[i].x -= raptors[i].speed;
+        break;
+      case 3:
+        if (raptors[i].y < canvas.height - 128)
+          raptors[i].y += raptors[i].speed;
+        break;
+      case 4:
+        if (raptors[i].x > 64)
+          raptors[i].y -= raptors[i].speed;
+        break;
+    }
+  }
+}
+
 var render = function() {
   if(bgImage.complete) {
     ctx.drawImage(bgImage, 0, 0);
@@ -122,6 +147,7 @@ var main = function() {
   var delta = now - then;
 
   update(delta / 1000);
+  movement();
   render();
 
   then = now;
