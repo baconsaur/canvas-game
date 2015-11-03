@@ -79,21 +79,17 @@ var collide = function() {
 };
 
 var update = function(modifier) {
-  if (38 in keysDown) { //up
-    if (hero.y > 32)
-      hero.y -= hero.speed * modifier;
+  if (38 in keysDown && hero.y > 32) { //up
+    hero.y -= hero.speed * modifier;
   }
-  if (40 in keysDown) { //down
-    if (hero.y < canvas.height - 64)
-      hero.y += hero.speed * modifier;
+  if (40 in keysDown && hero.y < canvas.height - 64) { //down
+    hero.y += hero.speed * modifier;
   }
-  if (37 in keysDown) { //left
-    if (hero.x > 32)
-      hero.x -= hero.speed * modifier;
+  if (37 in keysDown && hero.x > 32) { //left
+    hero.x -= hero.speed * modifier;
   }
-  if (39 in keysDown) { //right
-    if (hero.x < canvas.width - 64)
-      hero.x += hero.speed * modifier;
+  if (39 in keysDown && hero.x < canvas.width - 64) { //right
+    hero.x += hero.speed * modifier;
   }
 
   collide();
