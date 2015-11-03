@@ -1,7 +1,7 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = 512;
-canvas.height = 480;
+canvas.width = 600;
+canvas.height = 600;
 
 var bgImage = new Image();
 bgImage.src = "images/background.png";
@@ -12,8 +12,8 @@ heroImage.src = "images/hero.png";
 var appleImage = new Image();
 appleImage.src = "images/apple.png";
 
-var monsterImage = new Image();
-monsterImage.src = "images/monster.png";
+var raptorImage = new Image();
+raptorImage.src = "images/raptor.png";
 
 var hero = {
   speed: 256,
@@ -21,9 +21,9 @@ var hero = {
   y: 0
 };
 
-var monsters = [];
+var raptors = [];
 
-function Monster(){
+function Raptor(){
   this.x = 32 + (Math.random() * (canvas.width - 64));
   this.y = 32 + (Math.random() * (canvas.height - 64));
 }
@@ -49,19 +49,19 @@ var reset = function() {
   hero.y = canvas.height /2;
   applesCollected = 0;
   moveThis(apple);
-  monsters = [];
+  raptors = [];
 };
 var moveThis = function(obj) {
   obj.x = 32 + (Math.random() * (canvas.width - 64));
   obj.y = 32 + (Math.random() * (canvas.height - 64));
 }
 var collide = function() {
-  for (var i=0; i < monsters.length; i++){
+  for (var i=0; i < raptors.length; i++){
     if (
-      hero.x <= (monsters[i].x + 32)
-      && monsters[i].x <= (hero.x + 32)
-      && hero.y <= (monsters[i].y + 32)
-      && monsters[i].y <= (hero.y + 32)
+      hero.x <= (raptors[i].x + 32)
+      && raptors[i].x <= (hero.x + 32)
+      && hero.y <= (raptors[i].y + 32)
+      && raptors[i].y <= (hero.y + 32)
     ) {
       reset();
     }
@@ -74,7 +74,7 @@ var collide = function() {
   ) {
     ++applesCollected;
     moveThis(apple);
-    monsters.push(new Monster());
+    raptors.push(new Raptor());
   }
 };
 
@@ -102,16 +102,16 @@ var render = function() {
   if(heroImage.complete) {
     ctx.drawImage(heroImage, hero.x, hero.y);
   }
-  if(monsterImage.complete) {
-    for (var i in monsters)
-      ctx.drawImage(monsterImage, monsters[i].x, monsters[i].y);
+  if(raptorImage.complete) {
+    for (var i in raptors)
+      ctx.drawImage(raptorImage, raptors[i].x, raptors[i].y);
   }
   if(appleImage.complete) {
     ctx.drawImage(appleImage, apple.x, apple.y);
   }
 
   ctx.fillStyle = "rgb(250, 250, 250)";
-  ctx.font = "24px Helvetica";
+  ctx.font = "15px Helvetica";
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
   ctx.fillText("Apples collected: " + applesCollected, 32, 32);
