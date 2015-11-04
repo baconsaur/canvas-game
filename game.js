@@ -1,5 +1,6 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var frameTick = 0;
 canvas.width = 600;
 canvas.height = 600;
 
@@ -9,8 +10,8 @@ bgImage.src = "images/background.png";
 var heroImage = new Image();
 heroImage.src = "images/hero.png";
 
-var appleImage = new Image();
-appleImage.src = "images/apple.png";
+var gemImage = new Image();
+gemImage.src = "images/gem.png"
 
 var raptorImage = new Image();
 raptorImage.src = "images/raptor.png";
@@ -29,12 +30,13 @@ function Raptor(){
   this.speed = 16;
 }
 
-var apple = {
+var gem = {
   x: 0,
-  y: 0
+  y: 0,
+  framePos: 0
 };
 
-var applesCollected = 0;
+var gemsCollected = 0;
 var keysDown = {};
 
 addEventListener("keydown", function(e) {
@@ -48,8 +50,8 @@ addEventListener("keyup", function(e) {
 var reset = function() {
   hero.x = canvas.width / 2;
   hero.y = canvas.height /2;
-  applesCollected = 0;
-  moveThis(apple);
+  gemsCollected = 0;
+  moveThis(gem);
   raptors = [];
 };
 var moveThis = function(obj) {
@@ -68,13 +70,13 @@ var collide = function() {
     }
   }
   if (
-    hero.x <= (apple.x + 32)
-    && apple.x <= (hero.x + 32)
-    && hero.y <= (apple.y + 32)
-    && apple.y <= (hero.y + 32)
+    hero.x <= (gem.x + 32)
+    && gem.x <= (hero.x + 32)
+    && hero.y <= (gem.y + 32)
+    && gem.y <= (hero.y + 32)
   ) {
-    ++applesCollected;
-    moveThis(apple);
+    ++gemsCollected;
+    moveThis(gem);
     raptors.push(new Raptor());
   }
 };
@@ -92,7 +94,14 @@ var update = function(modifier) {
   if (39 in keysDown && hero.x < canvas.width - 64) { //right
     hero.x += hero.speed * modifier;
   }
-
+  frameTick++;
+  if (frameTick >= 5){
+    if (gem.framePos < 124)
+      gem.framePos += 18;
+    else
+      gem.framePos = 0;
+      frameTick = 0;
+  }
   collide();
 }
 
@@ -131,15 +140,15 @@ var render = function() {
     for (var i in raptors)
       ctx.drawImage(raptorImage, raptors[i].x, raptors[i].y);
   }
-  if(appleImage.complete) {
-    ctx.drawImage(appleImage, apple.x, apple.y);
+  if(gemImage.complete) {
+    ctx.drawImage(gemImage, gem.framePos, 0, 18, 18, gem.x, gem.y, 18, 18);
   }
 
   ctx.fillStyle = "rgb(250, 250, 250)";
   ctx.font = "15px Helvetica";
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
-  ctx.fillText("Apples collected: " + applesCollected, 32, 32);
+  ctx.fillText("Gems collected: " + gemsCollected, 32, 32);
 };
 
 var main = function() {
